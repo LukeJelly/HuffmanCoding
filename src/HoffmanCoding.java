@@ -32,7 +32,7 @@ public class HoffmanCoding {
 
         // Create a HashMap that holds all the HoffmanNodes in the HoffmanTree
         buildNodeHashMap(inFile);
-        // Use the HashMap to create a Priority Que that I then can use to make the tree
+        // Use the HashMap to create a Priority Queue that I then can use to make the tree
         PriorityQueue<HoffmanTreeNode> allNodes = new PriorityQueue<>(nodeHashMap.values());
         // Build the HoffmanTree
         buildHoffmanTree(allNodes);
