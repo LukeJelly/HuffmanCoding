@@ -4,14 +4,14 @@ import java.util.Scanner;
 import javax.swing.JFileChooser;
 
 /**
- * A simple user interface for my HoffmanTree Project.
+ * A simple user interface for my HuffmanTree Project.
  */
 public class UserInterface {
 
     /**
      * When you run this it will ask the user for a file, it will not work if you point
      * it to anything other than a .txt file.  It will then take that file and send 
-     * it to the HoffmanCoding class to encode it and decode it.  Then this class
+     * it to the HuffmanCoding class to encode it and decode it.  Then this class
      * will print out all the information about the encoded message and how many bits on average
      * were used. 
      * @param args
@@ -23,9 +23,9 @@ public class UserInterface {
         File selectedFile;
         if(returnValue == JFileChooser.APPROVE_OPTION){
             selectedFile = jfc.getSelectedFile();
-            String orignal = getFileString(selectedFile);
-            HoffmanCoding HC = new HoffmanCoding(selectedFile);
-            System.out.println("Orignal Message:\n" + orignal);
+            String original = getFileString(selectedFile);
+            HuffmanCoding HC = new HuffmanCoding(selectedFile);
+            System.out.println("Original Message:\n" + original);
             System.out.println("Symbol Frequency Table:\n" + HC.MapToString());
             System.out.println("Huffman Tree:");
             System.out.println(HC);

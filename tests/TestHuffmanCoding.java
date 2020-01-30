@@ -6,14 +6,14 @@ import org.junit.Test;
 
 import java.util.*;
 
-public class TestHoffmanCoding {
+public class TestHuffmanCoding {
 
     @Test
     public void timeInfiniteJest(){
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\InfiniteJest.txt";
         File inputFile = new File(fileLocation);
         double startTime = System.nanoTime();
-        new HoffmanCoding(inputFile);
+        new HuffmanCoding(inputFile);
         double endTime = System.nanoTime();
         double timeElapsed = endTime - startTime;
         System.out.println("Time Elapsed in milliseconds: " + (timeElapsed/1000000));
@@ -23,7 +23,7 @@ public class TestHoffmanCoding {
     public void testHelloWorld() {
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\test.txt";
         File inputFile = new File(fileLocation);
-        HoffmanCoding test = new HoffmanCoding(inputFile);
+        HuffmanCoding test = new HuffmanCoding(inputFile);
         String finalFile = getFileString(inputFile);
         String decodedMessage = test.getDecodedString();
         assertEquals(finalFile, decodedMessage);
@@ -33,7 +33,7 @@ public class TestHoffmanCoding {
     public void testHolesBook() {
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\holes.txt";
         File inputFile = new File(fileLocation);
-        HoffmanCoding test = new HoffmanCoding(inputFile);
+        HuffmanCoding test = new HuffmanCoding(inputFile);
         String finalFile = getFileString(inputFile);
         String decodedMessage = test.getDecodedString();
         assertEquals(finalFile, decodedMessage);
@@ -43,7 +43,7 @@ public class TestHoffmanCoding {
     public void testToString(){
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\test.txt";
         File inputFile = new File(fileLocation);
-        HoffmanCoding test = new HoffmanCoding(inputFile);
+        HuffmanCoding test = new HuffmanCoding(inputFile);
         String outString = test.toString();
         System.out.println(outString);
     }
@@ -52,7 +52,7 @@ public class TestHoffmanCoding {
     public void testNumBitsAvg(){
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\holes.txt";
         File inputFile = new File(fileLocation);
-        HoffmanCoding test = new HoffmanCoding(inputFile);
+        HuffmanCoding test = new HuffmanCoding(inputFile);
         assertEquals(4.64817, test.averageNumBits(), 0.00001);
     }
 

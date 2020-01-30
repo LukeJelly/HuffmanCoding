@@ -5,39 +5,40 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 /**
- * Proof of concept for a HoffmanCoding tree. Works with any .txt file.
+ * Proof of concept for a HuffmanCoding tree. Works with any .txt file.
  * 
  * @author Luke.Kelly
  * @version 12/2/2019
+ * HoffmanCoding
  */
-public class HoffmanCoding {
-    private HoffmanTreeNode rootOfHoffmanTree;
-    private HashMap<Character, HoffmanTreeNode> nodeHashMap;
+public class HuffmanCoding {
+    private HuffmanTreeNode rootOfHuffmanTree;
+    private HashMap<Character, HuffmanTreeNode> nodeHashMap;
     private String encodedMessage;
     private String decodedMessage;
 
     /**
-     * Creates the hoffman tree then encodes and decodes the message
+     * Creates the Huffman tree then encodes and decodes the message
      * 
      * @param inFile the file you wish to encode.
      * @throws IllegalArgumentException if the file does not exist.
      * @throws IllegalArgumentException if the file is empty.
      */
-    public HoffmanCoding(File inFile) {
+    public HuffmanCoding(File inFile) {
         // Check empty file
         long EMPTY_FILE = 0L;
         if (inFile.length() == EMPTY_FILE) {
             throw new IllegalArgumentException("Can not encode an empty file");
         }
 
-        // Create a HashMap that holds all the HoffmanNodes in the HoffmanTree
+        // Create a HashMap that holds all the HuffmanNodes in the HuffmanTree
         buildNodeHashMap(inFile);
         // Use the HashMap to create a Priority Queue that I then can use to make the tree
-        PriorityQueue<HoffmanTreeNode> allNodes = new PriorityQueue<>(nodeHashMap.values());
-        // Build the HoffmanTree
-        buildHoffmanTree(allNodes);
+        PriorityQueue<HuffmanTreeNode> allNodes = new PriorityQueue<>(nodeHashMap.values());
+        // Build the HuffmanTree
+        buildHuffmanTree(allNodes);
         // Assign a code to all the nodes based on their position in the tree.
-        assignCode(this.rootOfHoffmanTree, "");
+        assignCode(this.rootOfHuffmanTree, "");
 
         // Encode and Decode the message.
         encodeMessage(inFile);
@@ -70,19 +71,19 @@ public class HoffmanCoding {
      */
     private void decodeMessage(String msg) {
         StringBuffer output = new StringBuffer();
-        HoffmanTreeNode p = this.rootOfHoffmanTree;
+        HuffmanTreeNode p = this.rootOfHuffmanTree;
         int size = msg.length();
         int i = 0;
         // Check if only one node in the tree.
-        if (this.rootOfHoffmanTree.left == null && this.rootOfHoffmanTree.right == null) {
+        if (this.rootOfHuffmanTree.left == null && this.rootOfHuffmanTree.right == null) {
             for (int j = 0; j < size; j++) {
-                output.append(this.rootOfHoffmanTree.letter);
+                output.append(this.rootOfHuffmanTree.letter);
             }
         } else {
             for (; i < size; i++) {
                 if (p.left == null && p.right == null) {
                     output.append(p.letter);
-                    p = this.rootOfHoffmanTree;
+                    p = this.rootOfHuffmanTree;
                 }
                 int LorR = 48 - msg.charAt(i);
                 if (LorR == 0) {
@@ -147,7 +148,7 @@ public class HoffmanCoding {
      * @param p             A pointer that points to the node being evaluated.
      * @param encodingValue the String to be added as an encodingValue
      */
-    private void assignCode(HoffmanTreeNode p, String encodingValue) {
+    private void assignCode(HuffmanTreeNode p, String encodingValue) {
         if (nodeHashMap.size() == 1) {
             p.encodingValue = "0";
         } else {
@@ -160,20 +161,20 @@ public class HoffmanCoding {
     }
 
     /**
-     * Builds the hoffmanTree
+     * Builds the HuffmanTree
      * 
      * @param nodeProQueue The priority que that holds the nodes
      * @return an HNode pointing to the root of tree
      */
-    private void buildHoffmanTree(PriorityQueue<HoffmanTreeNode> nodeProQueue) {
+    private void buildHuffmanTree(PriorityQueue<HuffmanTreeNode> nodeProQueue) {
         while (nodeProQueue.size() > 1) {
-            nodeProQueue.add(new HoffmanTreeNode(nodeProQueue.poll(), nodeProQueue.poll()));
+            nodeProQueue.add(new HuffmanTreeNode(nodeProQueue.poll(), nodeProQueue.poll()));
         }
-        this.rootOfHoffmanTree = nodeProQueue.poll();
+        this.rootOfHuffmanTree = nodeProQueue.poll();
     }
 
     /**
-     * Builds a HasMap that holds all the HoffmanNodes, this method closes the
+     * Builds a HasMap that holds all the HuffmanNodes, this method closes the
      * scanner.
      * 
      * @param in a Scanner pointing to the file that holds your data.
@@ -181,7 +182,7 @@ public class HoffmanCoding {
      *         HNode that represents them.
      */
     private void buildNodeHashMap(File inFile) {
-        HashMap<Character, HoffmanTreeNode> HMHNode = new HashMap<>();
+        HashMap<Character, HuffmanTreeNode> HMHNode = new HashMap<>();
         byte DEFAULT_FIRST_FREQUENCY = 1;
         try (Scanner in = createScanner(inFile)) {
             while (in.hasNextLine()) {
@@ -189,9 +190,9 @@ public class HoffmanCoding {
                 line += "\n";
                 for (int i = 0; i < line.length(); i++) {
                     char c = line.charAt(i);
-                    HoffmanTreeNode tempHNode = HMHNode.get(c);
+                    HuffmanTreeNode tempHNode = HMHNode.get(c);
                     if (tempHNode == null) {
-                        HMHNode.put(c, new HoffmanTreeNode(c, DEFAULT_FIRST_FREQUENCY));
+                        HMHNode.put(c, new HuffmanTreeNode(c, DEFAULT_FIRST_FREQUENCY));
                     } else {
                         tempHNode.frequency++;
                     }
@@ -202,13 +203,13 @@ public class HoffmanCoding {
     }
 
     /**
-     * Simple to string method to print out the HoffmanTree
+     * Simple to string method to print out the HuffmanTree
      * 
-     * @return a String representation of the HoffmanTree.
+     * @return a String representation of the HuffmanTree.
      */
     public String toString() {
         StringBuffer output = new StringBuffer();
-        printSideways(this.rootOfHoffmanTree, "", output);
+        printSideways(this.rootOfHuffmanTree, "", output);
         return output.toString();
     }
 
@@ -219,7 +220,7 @@ public class HoffmanCoding {
      * @param indent the amount of indent
      * @param output the stringBuffer we are using to create the string.
      */
-    private void printSideways(HoffmanTreeNode root, String indent, StringBuffer output) {
+    private void printSideways(HuffmanTreeNode root, String indent, StringBuffer output) {
         if (root != null) {
             printSideways(root.right, indent + "    ", output);
             Character myChar = root.letter;
@@ -243,14 +244,14 @@ public class HoffmanCoding {
      * @return a String representing the Map.
      */
     public String MapToString() {
-        PriorityQueue<HoffmanTreeNode> PQ = new PriorityQueue<>();
-        for (HoffmanTreeNode HN : nodeHashMap.values()) {
+        PriorityQueue<HuffmanTreeNode> PQ = new PriorityQueue<>();
+        for (HuffmanTreeNode HN : nodeHashMap.values()) {
             PQ.add(HN);
         }
         StringBuffer output = new StringBuffer();
 
         while (!PQ.isEmpty()) {
-            HoffmanTreeNode HN = PQ.poll();
+            HuffmanTreeNode HN = PQ.poll();
             Character myChar = HN.letter;
             if (myChar == '\n') {
                 output.append("Value: " + "\\n" + " Frequency: " + HN.frequency + " Encoding Value: " + HN.encodingValue
@@ -275,14 +276,14 @@ public class HoffmanCoding {
 
     /**
      * Internal class that represents one character it is the building blocks of the
-     * HoffmanTree.
+     * HuffmanTree.
      */
-    class HoffmanTreeNode implements Comparable<HoffmanTreeNode> {
+    class HuffmanTreeNode implements Comparable<HuffmanTreeNode> {
         Character letter; // The letter this node represents
         int frequency; // The frequency of this letter
         String encodingValue; // The encoding value of this letter
-        HoffmanTreeNode left; // This nodes left child
-        HoffmanTreeNode right; // This nodes right child
+        HuffmanTreeNode left; // This nodes left child
+        HuffmanTreeNode right; // This nodes right child
 
         // If a node is not a leaf it should not have a letter.
 
@@ -293,7 +294,7 @@ public class HoffmanCoding {
          * @param letter    the letter this node represents
          * @param frequency It's frequency.
          */
-        public HoffmanTreeNode(Character letter, int frequency) {
+        public HuffmanTreeNode(Character letter, int frequency) {
             this.letter = letter;
             this.frequency = frequency;
         }
@@ -304,7 +305,7 @@ public class HoffmanCoding {
          * @param left  the node you wish to be put on the left
          * @param right the node you wish to be put on the right.
          */
-        public HoffmanTreeNode(HoffmanTreeNode left, HoffmanTreeNode right) {
+        public HuffmanTreeNode(HuffmanTreeNode left, HuffmanTreeNode right) {
             this.frequency = left.frequency + right.frequency;
             this.left = left;
             this.right = right;
@@ -312,8 +313,8 @@ public class HoffmanCoding {
 
         @Override
         /** {@inheritDoc} */
-        public int compareTo(HoffmanTreeNode o) {
-            HoffmanTreeNode foreign = (HoffmanTreeNode) o;
+        public int compareTo(HuffmanTreeNode o) {
+            HuffmanTreeNode foreign = (HuffmanTreeNode) o;
             if (foreign.frequency == this.frequency) {
                 return 0;
             } else if (foreign.frequency > this.frequency) {
@@ -326,8 +327,8 @@ public class HoffmanCoding {
         @Override
         /** {@inheritDoc} */
         public boolean equals(Object obj) {
-            if (obj instanceof HoffmanTreeNode) {
-                HoffmanTreeNode foreign = (HoffmanTreeNode) obj;
+            if (obj instanceof HuffmanTreeNode) {
+                HuffmanTreeNode foreign = (HuffmanTreeNode) obj;
                 if (foreign.letter == this.letter) {
                     return true;
                 }
