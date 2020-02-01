@@ -41,6 +41,7 @@ public class TestHuffmanCoding {
 
     @Test
     public void testToString(){
+        //TODO: Actually test this properly, use an assert.
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\test.txt";
         File inputFile = new File(fileLocation);
         HuffmanCoding test = new HuffmanCoding(inputFile);
