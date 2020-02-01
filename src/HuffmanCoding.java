@@ -230,7 +230,7 @@ public class HuffmanCoding {
     public String toString() {
         StringBuffer output = new StringBuffer();
         printSideways(this.rootOfHuffmanTree, "", output);
-        return output.toString();
+        return output.toString().trim();
     }
 
     /**
@@ -246,8 +246,7 @@ public class HuffmanCoding {
             Character myChar = root.letter;
             if (myChar != null) {
                 // Had to check if the letter was a new line char because that would just put a
-                // new line
-                // in the output.
+                // new line in the output.
                 String letter = root.letter == '\n' ? "\\n" : Character.toString(root.letter);
                 output.append(indent + "[" + letter + "]F: " + root.frequency + "\n");
             } else {

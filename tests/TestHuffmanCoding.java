@@ -43,10 +43,13 @@ public class TestHuffmanCoding {
     public void testToString(){
         //TODO: Actually test this properly, use an assert.
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\test.txt";
+        String properOutputFileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\toStringProperOutput.txt";
         File inputFile = new File(fileLocation);
         HuffmanCoding test = new HuffmanCoding(inputFile);
-        String outString = test.toString();
-        System.out.println(outString);
+        String actual = test.toString();
+        File properOutputFile = new File(properOutputFileLocation);
+        String expected = getFileString(properOutputFile);
+        assertEquals(expected, actual);
     }
 
     @Test
