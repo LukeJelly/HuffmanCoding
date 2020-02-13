@@ -4,7 +4,9 @@ import java.util.Scanner;
 import javax.swing.JFileChooser;
 
 /**
- * A simple user interface for my HuffmanTree Project.
+ * A simple user interface for my HuffmanTree Project that allows you to use a 
+ * file viewer to find the file you want to encode. It then prints that message 
+ * in the terminal.
  */
 public class UserInterface {
 
