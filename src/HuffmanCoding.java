@@ -33,16 +33,152 @@ public class HuffmanCoding {
 
         // Create a HashMap that holds all the HuffmanNodes in the HuffmanTree
         buildNodeHashMap(inFile);
-        // Use the HashMap to create a Priority Queue that I then can use to make the tree
-        PriorityQueue<HuffmanTreeNode> allNodes = new PriorityQueue<>(nodeHashMap.values());
         // Build the HuffmanTree
-        buildHuffmanTree(allNodes);
+        buildHuffmanTree();
         // Assign a code to all the nodes based on their position in the tree.
-        assignCode(this.rootOfHuffmanTree, "");
+        assignHuffmanCodeToAllNodes(this.rootOfHuffmanTree, "");
 
         // Encode and Decode the message.
         encodeMessage(inFile);
-        decodeMessage(this.encodedMessage);
+        decodeTheEncodedMessage();
+    }
+
+    private void buildNodeHashMap(File inFile) {
+        HashMap<Character, HuffmanTreeNode> HMHNode = new HashMap<>();
+        try (Scanner in = new Scanner(inFile)) {
+            loopThroughFileAddCharsToHashMap(in, HMHNode);
+        }catch(FileNotFoundException e){
+            throw new IllegalArgumentException("File could not be found, check file location.");
+        }
+        this.nodeHashMap = HMHNode;
+    }
+
+    private void loopThroughFileAddCharsToHashMap(Scanner in, 
+                                   HashMap<Character, HuffmanTreeNode> HMHNode){
+        while (in.hasNextLine()) {
+            String line = in.nextLine() + "\n";
+            addLineToNodeHashMap(line,HMHNode);
+        }
+    }
+
+    private void addLineToNodeHashMap(String line, 
+                                   HashMap<Character, HuffmanTreeNode> HMHNode){
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            addCharToNodeHashMap(c, HMHNode);
+        }
+    }
+
+    private void addCharToNodeHashMap(Character c,  
+                                   HashMap<Character, HuffmanTreeNode> HMHNode){
+        byte DEFAULT_FIRST_FREQUENCY = 1;
+        //If tempHNode is null the node doesn't exists.
+        HuffmanTreeNode tempHNode = HMHNode.get(c);
+        if (tempHNode == null) {
+            //So we create one
+            HMHNode.put(c, new HuffmanTreeNode(c, DEFAULT_FIRST_FREQUENCY));
+        } else {
+            //If it does we just increase it's frequency.
+            tempHNode.frequency++;
+        }
+    }
+
+    private void buildHuffmanTree() {
+        // Use the HashMap to create a Priority Queue.
+        PriorityQueue<HuffmanTreeNode> nodeProQueue = 
+                                      new PriorityQueue<>(nodeHashMap.values());
+        while (nodeProQueue.size() > 1) {
+            nodeProQueue.add(new HuffmanTreeNode(nodeProQueue.poll(),
+                                                 nodeProQueue.poll()));
+        }
+        this.rootOfHuffmanTree = nodeProQueue.poll();
+    }
+
+    private void assignHuffmanCodeToAllNodes(HuffmanTreeNode p, String encodingValue) {
+        if (nodeHashMap.size() == 1) {
+            p.encodingValue = "0";
+        } else {
+            if (p != null) {
+                p.encodingValue = encodingValue;
+                assignHuffmanCodeToAllNodes(p.left, encodingValue + "0");
+                assignHuffmanCodeToAllNodes(p.right, encodingValue + "1");
+            }
+        }
+    }
+
+    private void encodeMessage(File inFile) {
+        StringBuffer output = new StringBuffer();
+        try (Scanner in = new Scanner(inFile)) {
+            loopThroughFileAndEncodeEachLine(in, output);
+        }catch(FileNotFoundException e){
+            throw new IllegalArgumentException("File could not be found, check file location.");
+        }
+        this.encodedMessage = output.toString();
+    }
+
+    private void loopThroughFileAndEncodeEachLine(Scanner in, 
+                                                  StringBuffer output){
+        while (in.hasNextLine()) {
+            String line = in.nextLine();
+            findEncodingValueOfLine(line, output);
+            hasNextLineAddNewLineChar(in, output);
+        }
+
+    }
+
+    private void findEncodingValueOfLine(String line, StringBuffer output){
+        Character c;
+        for (int i = 0; i < line.length(); i++) {
+            c = line.charAt(i);
+            String encodedChar = nodeHashMap.get(c).encodingValue;
+            output.append(encodedChar);
+        }
+    }
+
+    private void hasNextLineAddNewLineChar(Scanner in, StringBuffer output){
+        if (in.hasNextLine()) {
+            String encodedChar = nodeHashMap.get('\n').encodingValue;
+            output.append(encodedChar);
+        }
+    }
+
+
+    //TODO: Fix this mess, decompose and make sure your code is readable.
+    private void decodeTheEncodedMessage() {
+        StringBuffer output = new StringBuffer();
+        String msg = this.encodedMessage;
+        HuffmanTreeNode p = this.rootOfHuffmanTree;
+        int lengthOfMessage = msg.length();
+
+        // Check if only one node in the tree.
+        if (this.rootOfHuffmanTree.left == null && this.rootOfHuffmanTree.right == null) {
+            for (int j = 0; j < lengthOfMessage; j++) {
+                output.append(this.rootOfHuffmanTree.letter);
+            }
+        } else {
+            for (int i = 0; i < lengthOfMessage; i++) {
+                if (p.left == null && p.right == null) {
+                    output.append(p.letter);
+                    p = this.rootOfHuffmanTree;
+                }
+
+                int encodedBinaryValue = msg.charAt(i);
+                boolean goLeft = ('0' - encodedBinaryValue == 0);
+                /*
+                 * If goLeftOrRight's value is 0 we know that the EncodedBinaryValue
+                 * was a 0, if not it must be one.
+                 */
+                if (goLeft){
+                    p = p.left;
+                } else {
+                    p = p.right;
+                }
+            }
+            if (p.letter != null) {
+                output.append(p.letter);
+            }
+        }
+        this.decodedMessage = output.toString();
     }
 
     /**
@@ -61,165 +197,6 @@ public class HuffmanCoding {
      */
     public String getDecodedString() {
         return this.decodedMessage;
-    }
-
-    /**
-     * Decodes the message.
-     * 
-     * @param msg the encoded message
-     * @return a String representing the decoded message
-     */
-    private void decodeMessage(String msg) {
-        StringBuffer output = new StringBuffer();
-        HuffmanTreeNode p = this.rootOfHuffmanTree;
-        int size = msg.length();
-        int i = 0;
-        // Check if only one node in the tree.
-        if (this.rootOfHuffmanTree.left == null && this.rootOfHuffmanTree.right == null) {
-            for (int j = 0; j < size; j++) {
-                output.append(this.rootOfHuffmanTree.letter);
-            }
-        } else {
-            for (; i < size; i++) {
-                if (p.left == null && p.right == null) {
-                    output.append(p.letter);
-                    p = this.rootOfHuffmanTree;
-                }
-                int LorR = 48 - msg.charAt(i);
-                if (LorR == 0) {
-                    p = p.left;
-                } else {
-                    p = p.right;
-                }
-            }
-            if (p.letter != null) {
-                output.append(p.letter);
-            }
-        }
-        this.decodedMessage = output.toString();
-    }
-
-    /**
-     * Encodes the message, assumes that the HuffmanTree has already been build,
-     * 
-     * @param in a scanner pointing to the file that holds the message.
-     * @return a String representing the encoded message.
-     */
-    private void encodeMessage(File inFile) {
-        StringBuffer output = new StringBuffer();
-        try (Scanner in = new Scanner(inFile)) {
-            while (in.hasNextLine()) {
-                String line = in.nextLine();
-                findEncodingValueOfLine(line, output);
-                hasNextLine(in, output);
-            }
-        }catch(FileNotFoundException e){
-            throw new IllegalArgumentException("File could not be found, check file location.");
-        }
-        this.encodedMessage = output.toString();
-    }
-
-    /**
-     * Finds the encoding value for every char in the given String
-     * 
-     * @param line the String to loop through
-     * @param output the StringBuffer to add all the encoding values to.
-     */
-    private void findEncodingValueOfLine(String line, StringBuffer output){
-        Character c;
-        for (int i = 0; i < line.length(); i++) {
-            c = line.charAt(i);
-            String encodedChar = nodeHashMap.get(c).encodingValue;
-            output.append(encodedChar);
-        }
-    }
-
-    /**
-     * If the scanner has another line of text we want to add a new line char to
-     * the of the the StringBuffer.
-     *
-     * @param in the Scanner to check
-     * @param output the StringBuffer to add to.
-     */
-    private void hasNextLine(Scanner in, StringBuffer output){
-        if (in.hasNextLine()) {
-            String encodedChar = nodeHashMap.get('\n').encodingValue;
-            output.append(encodedChar);
-        }
-    }
-
-    /**
-     * Goes through the hashmap and assigns encodingValues to all leaf nodes.
-     * 
-     * @param p             A pointer that points to the node being evaluated.
-     * @param encodingValue the String to be added as an encodingValue
-     */
-    private void assignCode(HuffmanTreeNode p, String encodingValue) {
-        if (nodeHashMap.size() == 1) {
-            p.encodingValue = "0";
-        } else {
-            if (p != null) {
-                p.encodingValue = encodingValue;
-                assignCode(p.left, encodingValue + "0");
-                assignCode(p.right, encodingValue + "1");
-            }
-        }
-    }
-
-    /**
-     * Builds the HuffmanTree
-     * 
-     * @param nodeProQueue The priority que that holds the nodes
-     * @return an HNode pointing to the root of tree
-     */
-    private void buildHuffmanTree(PriorityQueue<HuffmanTreeNode> nodeProQueue) {
-        while (nodeProQueue.size() > 1) {
-            nodeProQueue.add(new HuffmanTreeNode(nodeProQueue.poll(),
-                                                 nodeProQueue.poll()));
-        }
-        this.rootOfHuffmanTree = nodeProQueue.poll();
-    }
-
-    /**
-     * Builds a HasMap that holds all the HuffmanNodes, this method closes the
-     * scanner.
-     * 
-     * @param in a Scanner pointing to the file that holds your data.
-     * @return a Hashmap that holds all the Characters in that file, and then an
-     *         HNode that represents them.
-     */
-    private void buildNodeHashMap(File inFile) {
-        HashMap<Character, HuffmanTreeNode> HMHNode = new HashMap<>();
-        try (Scanner in = new Scanner(inFile)) {
-            while (in.hasNextLine()) {
-                String line = in.nextLine() + "\n";
-                addToNodeHashMap(line,HMHNode);
-            }
-        }catch(FileNotFoundException e){
-            throw new IllegalArgumentException("File could not be found, check file location.");
-        }
-        this.nodeHashMap = HMHNode;
-    }
-
-    /**
-     * Loops through the given String and adds all the chars to the HashMap.
-     * @param line The string to loop through
-     * @param HMHNode the HashMap to add them to.
-     */
-    private void addToNodeHashMap(String line, HashMap<Character, HuffmanTreeNode> HMHNode){
-        byte DEFAULT_FIRST_FREQUENCY = 1;
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            //If tempHNode is null the node doesn't exists.
-            HuffmanTreeNode tempHNode = HMHNode.get(c);
-            if (tempHNode == null) {
-                //So we create one
-                HMHNode.put(c, new HuffmanTreeNode(c, DEFAULT_FIRST_FREQUENCY));
-            } else {
-                //If it does we just increase it's frequency.
-                tempHNode.frequency++;
-            }
-        }
     }
 
     /**
