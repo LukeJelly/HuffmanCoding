@@ -20,6 +20,16 @@ public class TestHuffmanCoding {
     }
 
     @Test
+    public void testAllOneLetter(){
+        String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\AllOneLetter.txt";
+        File inputFile = new File(fileLocation);
+        HuffmanCoding test = new HuffmanCoding(inputFile);
+        String finalFile = getFileString(inputFile);
+        String decodedMessage = test.getDecodedString();
+        assertEquals(finalFile, decodedMessage);
+    }
+
+    @Test
     public void testHelloWorld() {
         String fileLocation = "C:\\Users\\LukeJ\\OneDrive\\Documents\\School\\North Seattle\\2019\\Fall 2019\\CSC 143\\Assignments\\Assignment 6\\tests\\test.txt";
         File inputFile = new File(fileLocation);

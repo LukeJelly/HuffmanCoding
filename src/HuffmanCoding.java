@@ -150,36 +150,36 @@ public class HuffmanCoding {
         HuffmanTreeNode p = this.rootOfHuffmanTree;
         int lengthOfMessage = msg.length();
 
-        // Check if only one node in the tree.
-        if (this.rootOfHuffmanTree.left == null && this.rootOfHuffmanTree.right == null) {
-            for (int j = 0; j < lengthOfMessage; j++) {
-                output.append(this.rootOfHuffmanTree.letter);
+        for (int i = 0; i < lengthOfMessage; i++) {
+            if (isLeafNode(p)) {
+                addNodesLetterToStringBuffer(p, output);
+                p = this.rootOfHuffmanTree;
             }
-        } else {
-            for (int i = 0; i < lengthOfMessage; i++) {
-                if (p.left == null && p.right == null) {
-                    output.append(p.letter);
-                    p = this.rootOfHuffmanTree;
-                }
-
-                int encodedBinaryValue = msg.charAt(i);
-                boolean goLeft = ('0' - encodedBinaryValue == 0);
-                /*
-                 * If goLeftOrRight's value is 0 we know that the EncodedBinaryValue
-                 * was a 0, if not it must be one.
-                 */
-                if (goLeft){
-                    p = p.left;
-                } else {
-                    p = p.right;
-                }
-            }
-            if (p.letter != null) {
-                output.append(p.letter);
+            int encodedBinaryValue = msg.charAt(i);
+            boolean goLeft = ('0' - encodedBinaryValue == 0);
+            if (goLeft){
+                p = p.left;
+            } else {
+                p = p.right;
             }
         }
+        /*
+         * The pointer is pointing at a node now, add this to the 
+         * StringBuffer then return that value.
+         */
+        output.append(p.letter);
+        
         this.decodedMessage = output.toString();
     }
+
+    private boolean isLeafNode(HuffmanTreeNode node){
+        return(node.left == null & node.right == null);
+    }
+
+    private void addNodesLetterToStringBuffer(HuffmanTreeNode node, StringBuffer output){
+        output.append(node.letter);
+    }
+
 
     /**
      * Returns the encoded message
